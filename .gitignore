@@ -46,9 +46,9 @@ secrets.json
 # ============================================
 # Django & Databases
 # ============================================
-db.sqlite3
+# db.sqlite3 is included so Vercel has the populated product catalog and categories
+# db.sqlite3
 db.sqlite3-journal
-*.sqlite3
 
 # Static / Media runtime (Uncomment if you do not want to push uploaded media)
 # media/

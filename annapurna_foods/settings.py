@@ -1,3 +1,6 @@
+import os
+import shutil
+import tempfile
 from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -56,12 +59,26 @@ TEMPLATES = [
 WSGI_APPLICATION = 'annapurna_foods.wsgi.application'
 
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+# Database: local SQLite locally, or temp copy on Vercel's read-only serverless filesystem
+if os.environ.get('VERCEL'):
+    db_dir = tempfile.gettempdir()
+    db_path = os.path.join(db_dir, 'db.sqlite3')
+    source_db = BASE_DIR / 'db.sqlite3'
+    if not os.path.exists(db_path) and os.path.exists(source_db):
+        shutil.copy2(source_db, db_path)
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': db_path,
+        }
     }
-}
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
 
 
 AUTH_PASSWORD_VALIDATORS = [
@@ -87,11 +104,12 @@ USE_TZ = True
 
 
 # Static files: CSS, JavaScript, and built-in website images.
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 # Uploaded product and category images.
-MEDIA_URL = 'media/'
+MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
