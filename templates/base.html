@@ -1,0 +1,202 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Annapurna Foods — authentic Indian sweets, namkeen, pickles and masalas.">
+    <title>{% block title %}Annapurna Foods{% endblock %}</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <!-- Page Loader Overlay -->
+    {% if request.path != '/cart/' %}
+    <div class="page-loader" id="pageLoader">
+        <div class="loader-spinner"></div>
+        <span class="loader-brand">Annapurna Foods</span>
+    </div>
+    {% endif %}
+
+    <div class="announcement-bar">
+        <div class="container d-flex justify-content-center justify-content-md-between gap-2 gap-md-4 flex-wrap">
+            <span><i class="bi bi-truck me-1"></i> Free Shipping on Orders Above ₹999</span>
+            <span><i class="bi bi-stars me-1"></i> Delivering Authentic Taste Since 1992</span>
+        </div>
+    </div>
+
+    <nav class="navbar navbar-expand-lg main-navbar sticky-top">
+        <div class="container">
+            <a class="navbar-brand brand-logo" href="{% url 'store:home' %}">
+                <span class="brand-mark"><i class="bi bi-flower1"></i></span>
+                <span>
+                    <strong>ANNAPURNA</strong>
+                    <small>FOODS</small>
+                </span>
+            </a>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#mainNavigation" aria-controls="mainNavigation"
+                    aria-expanded="false" aria-label="Open navigation menu">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="mainNavigation">
+                <ul class="navbar-nav mx-auto align-items-lg-center">
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.path == '/' %}active{% endif %}" href="{% url 'store:home' %}">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.path == '/products/' %}active{% endif %}" href="{% url 'store:product_list' %}">All Products</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if '/category/sweets/' in request.path %}active{% endif %}" href="{% url 'store:category_detail' 'sweets' %}">Sweets</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if '/category/namkeen/' in request.path %}active{% endif %}" href="{% url 'store:category_detail' 'namkeen' %}">Namkeen</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if '/category/masales/' in request.path %}active{% endif %}" href="{% url 'store:category_detail' 'masales' %}">Masales</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if '/category/pickle/' in request.path %}active{% endif %}" href="{% url 'store:category_detail' 'pickle' %}">Pickle</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if '/new-launches/' in request.path %}active{% endif %}" href="{% url 'store:new_launches' %}">New Launches</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if '/festive-combos/' in request.path %}active{% endif %}" href="{% url 'store:festive_combos' %}">Festive Combos</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle {% if '/about/' in request.path or '/contact/' in request.path or '/category/dry-fruits/' in request.path or '/category/gift-hampers/' in request.path %}active{% endif %}" href="#" role="button"
+                           data-bs-toggle="dropdown" aria-expanded="false">
+                            More
+                        </a>
+                        <ul class="dropdown-menu border-0 shadow">
+                            <li><a class="dropdown-item {% if request.path == '/about/' %}active{% endif %}" href="{% url 'store:about' %}"><i class="bi bi-book me-2 text-gold"></i> Our Story</a></li>
+                            <li><a class="dropdown-item {% if request.path == '/contact/' %}active{% endif %}" href="{% url 'store:contact' %}"><i class="bi bi-telephone me-2 text-gold"></i> Contact Us</a></li>
+                            <li><hr class="dropdown-divider my-1"></li>
+                            <li><a class="dropdown-item {% if '/category/dry-fruits/' in request.path %}active{% endif %}" href="{% url 'store:category_detail' 'dry-fruits' %}"><i class="bi bi-nut me-2 text-gold"></i> Dry Fruits</a></li>
+                            <li><a class="dropdown-item {% if '/category/gift-hampers/' in request.path %}active{% endif %}" href="{% url 'store:category_detail' 'gift-hampers' %}"><i class="bi bi-gift me-2 text-gold"></i> Gift Hampers</a></li>
+                        </ul>
+                    </li>
+                </ul>
+
+                <div class="nav-actions d-flex align-items-center gap-2 mt-3 mt-lg-0">
+                    <a class="nav-icon" href="{% url 'store:search_products' %}" aria-label="Search products" title="Search Products">
+                        <i class="bi bi-search"></i>
+                    </a>
+                    <a class="nav-icon" href="/admin/" aria-label="Account / Admin" title="Account / Admin Login">
+                        <i class="bi bi-person"></i>
+                    </a>
+                    <a class="nav-icon cart-link" href="{% url 'store:cart_detail' %}" aria-label="Shopping cart" title="View Cart">
+                        <i class="bi bi-bag"></i>
+                        <span class="cart-count">{{ cart_item_count }}</span> 
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    {% block footer %}
+    <footer class="site-footer">
+        <div class="container">
+            <div class="row g-4 g-lg-5">
+                <!-- Brand column -->
+                <div class="col-lg-4 col-md-6">
+                    <div class="footer-brand">
+                        <a class="brand-logo" href="/">
+                            <span class="brand-mark"><i class="bi bi-flower1"></i></span>
+                            <span>
+                                <strong>ANNAPURNA</strong>
+                                <small>FOODS</small>
+                            </span>
+                        </a>
+                    </div>
+                    <p class="footer-tagline">
+                        Bringing the authentic taste of India to every home since 1992. Handcrafted with love, tradition, and the finest ingredients.
+                    </p>
+                    <div class="footer-social">
+                        <a href="#" aria-label="Facebook"><i class="bi bi-facebook"></i></a>
+                        <a href="#" aria-label="Instagram"><i class="bi bi-instagram"></i></a>
+                        <a href="#" aria-label="Twitter"><i class="bi bi-twitter-x"></i></a>
+                        <a href="#" aria-label="YouTube"><i class="bi bi-youtube"></i></a>
+                    </div>
+                </div>
+
+                <!-- Quick Links -->
+                <div class="col-lg-2 col-md-6 col-6">
+                    <h4 class="footer-heading">Quick Links</h4>
+                    <ul class="footer-links">
+                        <li><a href="/">Home</a></li>
+                        <li><a href="/products/">All Products</a></li>
+                        <li><a href="/about/">Our Story</a></li>
+                        <li><a href="/contact/">Contact Us</a></li>
+                        <li><a href="/cart/">Shopping Cart</a></li>
+                    </ul>
+                </div>
+
+                <!-- Categories -->
+                <div class="col-lg-2 col-md-6 col-6">
+                    <h4 class="footer-heading">Categories</h4>
+                    <ul class="footer-links">
+                        <li><a href="/category/sweets/">Sweets</a></li>
+                        <li><a href="/category/namkeen/">Namkeen</a></li>
+                        <li><a href="/category/masales/">Masales</a></li>
+                        <li><a href="/category/pickle/">Pickle</a></li>
+                        <li><a href="/category/dry-fruits/">Dry Fruits</a></li>
+                    </ul>
+                </div>
+
+                <!-- Contact Info -->
+                <div class="col-lg-4 col-md-6">
+                    <h4 class="footer-heading">Contact Us</h4>
+                    <div class="footer-contact-item">
+                        <i class="bi bi-geo-alt-fill"></i>
+                        <span>123 Traditional Lane, Chandni Chowk,<br>New Delhi, India — 110006</span>
+                    </div>
+                    <div class="footer-contact-item">
+                        <i class="bi bi-telephone-fill"></i>
+                        <a href="tel:+911234567890">+91 12345 67890</a>
+                    </div>
+                    <div class="footer-contact-item">
+                        <i class="bi bi-envelope-fill"></i>
+                        <a href="mailto:hello@annapurnafoods.in">hello@annapurnafoods.in</a>
+                    </div>
+                    <div class="footer-contact-item">
+                        <i class="bi bi-clock-fill"></i>
+                        <span>Mon – Sat: 9:00 AM – 8:00 PM</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>&copy; 2024 <span>Annapurna Foods</span>. All rights reserved. Crafted with <i class="bi bi-heart-fill" style="color:var(--gold);font-size:0.65rem"></i> in India.</p>
+                <div class="footer-payments">
+                    <i class="bi bi-credit-card-2-front"></i>
+                    <i class="bi bi-wallet2"></i>
+                    <i class="bi bi-bank"></i>
+                    <i class="bi bi-phone"></i>
+                </div>
+            </div>
+        </div>
+    </footer>
+    {% endblock %}
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{% static 'js/script.js' %}"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

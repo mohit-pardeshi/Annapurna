@@ -1,0 +1,355 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Secure Checkout | Annapurna Foods{% endblock %}
+
+{% block content %}
+<section class="page-banner">
+    <div class="container">
+        <p class="eyebrow text-gold">FINAL STEP</p>
+        <h1>Secure Checkout</h1>
+        <p class="banner-sub">Complete your delivery address and payment to confirm your festive order.</p>
+    </div>
+</section>
+
+<section class="section-space checkout-section">
+    <div class="container">
+        <form method="post" action="{% url 'store:checkout' %}" id="checkoutOrderForm" novalidate>
+            {% csrf_token %}
+
+            <div class="row g-4 g-lg-5">
+                <!-- Left Column: Delivery Address & Payment Options -->
+                <div class="col-lg-7">
+                    <!-- Step 1: Delivery Address -->
+                    <div class="checkout-card mb-4">
+                        <div class="checkout-card-header">
+                            <span class="step-badge">1</span>
+                            <div>
+                                <h2>Delivery Address</h2>
+                                <p>Where should we deliver your authentic delicacies?</p>
+                            </div>
+                        </div>
+
+                        <div class="checkout-card-body">
+                            <div class="row g-3">
+                                <div class="col-md-12">
+                                    <label for="fullName" class="form-label">Full Name <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" id="fullName" name="full_name"
+                                           value="{{ form_data.full_name|default:'' }}"
+                                           placeholder="e.g. Ramesh Chandra Sharma" required>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label for="phone" class="form-label">Mobile Number <span class="text-danger">*</span></label>
+                                    <div class="input-group">
+                                        <span class="input-group-text">+91</span>
+                                        <input type="tel" class="form-control" id="phone" name="phone"
+                                               value="{{ form_data.phone|default:'' }}"
+                                               placeholder="10-digit mobile number" maxlength="10" required>
+                                    </div>
+                                    <small class="text-muted">We will send tracking updates via SMS</small>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label for="email" class="form-label">Email Address <span class="text-muted">(Optional)</span></label>
+                                    <input type="email" class="form-control" id="email" name="email"
+                                           value="{{ form_data.email|default:'' }}"
+                                           placeholder="e.g. ramesh@example.com">
+                                    <small class="text-muted">For your digital order invoice</small>
+                                </div>
+
+                                <div class="col-md-12">
+                                    <label for="address" class="form-label">Street Address / Flat / Building <span class="text-danger">*</span></label>
+                                    <textarea class="form-control" id="address" name="address" rows="2"
+                                              placeholder="House / Flat No., Society, Landmark, Street" required>{{ form_data.address|default:'' }}</textarea>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <label for="city" class="form-label">City / District <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" id="city" name="city"
+                                           value="{{ form_data.city|default:'' }}"
+                                           placeholder="e.g. Jaipur" required>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <label for="state" class="form-label">State <span class="text-danger">*</span></label>
+                                    <select class="form-select" id="state" name="state" required>
+                                        <option value="" disabled {% if not form_data.state %}selected{% endif %}>Select State</option>
+                                        <option value="Rajasthan" {% if form_data.state == 'Rajasthan' %}selected{% endif %}>Rajasthan</option>
+                                        <option value="Maharashtra" {% if form_data.state == 'Maharashtra' %}selected{% endif %}>Maharashtra</option>
+                                        <option value="Delhi" {% if form_data.state == 'Delhi' %}selected{% endif %}>Delhi</option>
+                                        <option value="Gujarat" {% if form_data.state == 'Gujarat' %}selected{% endif %}>Gujarat</option>
+                                        <option value="Uttar Pradesh" {% if form_data.state == 'Uttar Pradesh' %}selected{% endif %}>Uttar Pradesh</option>
+                                        <option value="Madhya Pradesh" {% if form_data.state == 'Madhya Pradesh' %}selected{% endif %}>Madhya Pradesh</option>
+                                        <option value="Punjab" {% if form_data.state == 'Punjab' %}selected{% endif %}>Punjab</option>
+                                        <option value="Haryana" {% if form_data.state == 'Haryana' %}selected{% endif %}>Haryana</option>
+                                        <option value="Karnataka" {% if form_data.state == 'Karnataka' %}selected{% endif %}>Karnataka</option>
+                                        <option value="West Bengal" {% if form_data.state == 'West Bengal' %}selected{% endif %}>West Bengal</option>
+                                        <option value="Tamil Nadu" {% if form_data.state == 'Tamil Nadu' %}selected{% endif %}>Tamil Nadu</option>
+                                        <option value="Telangana" {% if form_data.state == 'Telangana' %}selected{% endif %}>Telangana</option>
+                                        <option value="Bihar" {% if form_data.state == 'Bihar' %}selected{% endif %}>Bihar</option>
+                                        <option value="Other" {% if form_data.state == 'Other' %}selected{% endif %}>Other State</option>
+                                    </select>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <label for="pincode" class="form-label">Pincode <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" id="pincode" name="pincode"
+                                           value="{{ form_data.pincode|default:'' }}"
+                                           placeholder="6-digit pincode" maxlength="6" required>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Step 2: Payment Method -->
+                    <div class="checkout-card mb-4">
+                        <div class="checkout-card-header">
+                            <span class="step-badge">2</span>
+                            <div>
+                                <h2>Payment Method</h2>
+                                <p>Select your preferred mode of payment</p>
+                            </div>
+                        </div>
+
+                        <div class="checkout-card-body">
+                            <div class="payment-options-grid">
+                                <!-- Option 1: UPI -->
+                                <label class="payment-card-option" for="payUpi">
+                                    <div class="d-flex align-items-center">
+                                        <input class="form-check-input me-3" type="radio" name="payment_method" id="payUpi" value="upi"
+                                               {% if form_data.payment_method == 'upi' or not form_data.payment_method %}checked{% endif %}>
+                                        <div>
+                                            <strong class="d-block">UPI Instant Payment</strong>
+                                            <span class="text-muted small">Google Pay, PhonePe, Paytm, BHIM UPI</span>
+                                        </div>
+                                    </div>
+                                    <span class="badge bg-success-subtle text-success border border-success-subtle">Instant</span>
+                                </label>
+
+                                <!-- UPI Details sub-panel -->
+                                <div class="payment-subpanel" id="panelUpi">
+                                    <div class="row g-2 align-items-center">
+                                        <div class="col-sm-8">
+                                            <input type="text" class="form-control" placeholder="Enter Virtual UPI ID (e.g. mobile@upi)" id="upiIdField">
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <span class="upi-verify-tag"><i class="bi bi-shield-check text-success"></i> Auto-verified</span>
+                                        </div>
+                                    </div>
+                                    <p class="small text-muted mt-2 mb-0">You can also approve payment directly from your UPI app notification.</p>
+                                </div>
+
+                                <!-- Option 2: Credit / Debit Card -->
+                                <label class="payment-card-option" for="payCard">
+                                    <div class="d-flex align-items-center">
+                                        <input class="form-check-input me-3" type="radio" name="payment_method" id="payCard" value="card"
+                                               {% if form_data.payment_method == 'card' %}checked{% endif %}>
+                                        <div>
+                                            <strong class="d-block">Credit / Debit Card</strong>
+                                            <span class="text-muted small">Visa, MasterCard, RuPay, Maestro</span>
+                                        </div>
+                                    </div>
+                                    <i class="bi bi-credit-card-2-front text-muted fs-4"></i>
+                                </label>
+
+                                <!-- Card Details sub-panel -->
+                                <div class="payment-subpanel d-none" id="panelCard">
+                                    <div class="row g-2">
+                                        <div class="col-12">
+                                            <input type="text" class="form-control" placeholder="Card Number (16 digits)" maxlength="19">
+                                        </div>
+                                        <div class="col-6">
+                                            <input type="text" class="form-control" placeholder="MM / YY" maxlength="5">
+                                        </div>
+                                        <div class="col-6">
+                                            <input type="password" class="form-control" placeholder="CVV" maxlength="4">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Option 3: Net Banking -->
+                                <label class="payment-card-option" for="payNetbanking">
+                                    <div class="d-flex align-items-center">
+                                        <input class="form-check-input me-3" type="radio" name="payment_method" id="payNetbanking" value="netbanking"
+                                               {% if form_data.payment_method == 'netbanking' %}checked{% endif %}>
+                                        <div>
+                                            <strong class="d-block">Net Banking</strong>
+                                            <span class="text-muted small">SBI, HDFC, ICICI, Axis, PNB and 50+ banks</span>
+                                        </div>
+                                    </div>
+                                    <i class="bi bi-bank text-muted fs-4"></i>
+                                </label>
+
+                                <!-- Option 4: Cash on Delivery -->
+                                <label class="payment-card-option" for="payCod">
+                                    <div class="d-flex align-items-center">
+                                        <input class="form-check-input me-3" type="radio" name="payment_method" id="payCod" value="cod"
+                                               {% if form_data.payment_method == 'cod' %}checked{% endif %}>
+                                        <div>
+                                            <strong class="d-block">Cash on Delivery (COD)</strong>
+                                            <span class="text-muted small">Pay with cash or UPI QR at your doorstep</span>
+                                        </div>
+                                    </div>
+                                    <span class="badge bg-gold-subtle text-maroon border border-gold">Available</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Terms & Conditions Checkbox -->
+                    <div class="terms-card mb-4">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="terms_accepted" id="termsAccepted" required checked>
+                            <label class="form-check-label small" for="termsAccepted">
+                                I confirm that all delivery details are accurate and agree to the
+                                <a href="{% url 'store:about' %}" target="_blank" class="text-maroon fw-semibold">Terms & Conditions</a>
+                                and Return Policy of Annapurna Foods.
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Place Order Button -->
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-gold btn-lg place-order-btn" id="placeOrderBtn">
+                            <i class="bi bi-shield-lock-fill me-2"></i>
+                            Place Order • ₹<span id="btnTotalDisplay">{{ checkout_data.total_amount }}</span>
+                        </button>
+                    </div>
+
+                    <!-- Security & Trust Row -->
+                    <div class="checkout-trust-row mt-3">
+                        <span><i class="bi bi-shield-check text-success"></i> 256-Bit SSL Encryption</span>
+                        <span><i class="bi bi-patch-check text-gold"></i> 100% Authentic Fresh Food</span>
+                        <span><i class="bi bi-truck text-primary"></i> Direct Factory Dispatch</span>
+                    </div>
+                </div>
+
+                <!-- Right Column: Sticky Order Summary & Coupons -->
+                <div class="col-lg-5">
+                    <aside class="checkout-summary-sidebar">
+                        <div class="summary-header d-flex justify-content-between align-items-center">
+                            <h3>Order Summary</h3>
+                            <span class="badge bg-maroon text-gold px-2 py-1">{{ checkout_data.total_quantity }} Items</span>
+                        </div>
+
+                        <!-- Product Items List -->
+                        <div class="checkout-items-list">
+                            {% for item in checkout_data.cart_items %}
+                            <div class="checkout-item-row">
+                                <div class="checkout-item-img">
+                                    {% if item.product.image %}
+                                    <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}">
+                                    {% else %}
+                                    <i class="bi bi-basket2-fill"></i>
+                                    {% endif %}
+                                    <span class="item-qty-bubble">{{ item.quantity }}</span>
+                                </div>
+                                <div class="checkout-item-info">
+                                    <h4>{{ item.product.name }}</h4>
+                                    <p class="small text-muted mb-0">₹{{ item.unit_price }} each</p>
+                                </div>
+                                <div class="checkout-item-price">
+                                    ₹{{ item.line_total }}
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+
+                        <!-- Interactive Coupon Code Box -->
+                        <div class="checkout-coupon-box">
+                            <div class="coupon-input-group">
+                                <input type="text" class="form-control" id="couponCodeInput" placeholder="Enter coupon (e.g. ANNAPURNA10)"
+                                       value="{{ checkout_data.coupon_code|default:'' }}"
+                                       {% if checkout_data.coupon_code %}readonly{% endif %}>
+                                {% if checkout_data.coupon_code %}
+                                <button type="button" class="btn btn-outline-danger" id="btnRemoveCoupon">Remove</button>
+                                {% else %}
+                                <button type="button" class="btn btn-gold" id="btnApplyCoupon">Apply</button>
+                                {% endif %}
+                            </div>
+
+                            <div class="coupon-feedback mt-2" id="couponFeedback">
+                                {% if checkout_data.coupon_code %}
+                                <div class="alert alert-success py-1 px-2 mb-0 small d-flex align-items-center justify-content-between">
+                                    <span><i class="bi bi-check-circle-fill me-1"></i> {{ checkout_data.coupon_message }}</span>
+                                    <strong>- ₹{{ checkout_data.discount_amount }}</strong>
+                                </div>
+                                {% endif %}
+                            </div>
+
+                            <!-- Promo Suggestions -->
+                            {% if not checkout_data.coupon_code %}
+                            <div class="promo-chips mt-2">
+                                <span class="promo-chip" data-code="ANNAPURNA10">🏷️ ANNAPURNA10 (10% OFF)</span>
+                                <span class="promo-chip" data-code="FESTIVE500">🎉 FESTIVE500 (₹500 OFF)</span>
+                                <span class="promo-chip" data-code="WELCOME50">✨ WELCOME50 (₹50 OFF)</span>
+                            </div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Price Breakdown -->
+                        <div class="checkout-totals-block">
+                            <div class="total-row">
+                                <span>Subtotal</span>
+                                <strong id="summarySubtotal">₹{{ checkout_data.subtotal }}</strong>
+                            </div>
+
+                            <div class="total-row {% if not checkout_data.discount_amount %}d-none{% endif %}" id="rowDiscount">
+                                <span class="text-success"><i class="bi bi-tag-fill me-1"></i> Coupon Discount</span>
+                                <strong class="text-success" id="summaryDiscount">- ₹{{ checkout_data.discount_amount }}</strong>
+                            </div>
+
+                            <div class="total-row">
+                                <span>Delivery Charges</span>
+                                <span id="summaryDelivery">
+                                    {% if checkout_data.is_free_delivery %}
+                                    <strong class="text-success fw-bold">FREE</strong>
+                                    {% else %}
+                                    <strong>₹{{ checkout_data.delivery_charge }}</strong>
+                                    {% endif %}
+                                </span>
+                            </div>
+                            {% if not checkout_data.is_free_delivery %}
+                            <p class="free-shipping-hint">
+                                <i class="bi bi-info-circle me-1"></i> Add ₹{{ checkout_data.free_delivery_threshold|default:"999" }} worth products for <strong>Free Delivery</strong>!
+                            </p>
+                            {% endif %}
+
+                            <div class="total-row">
+                                <span>Taxes & GST (5%)</span>
+                                <strong id="summaryTax">₹{{ checkout_data.tax_amount }}</strong>
+                            </div>
+
+                            <hr>
+
+                            <div class="total-row grand-total-row">
+                                <div>
+                                    <span class="grand-label">Grand Total</span>
+                                    <small class="d-block text-muted">Inclusive of all taxes</small>
+                                </div>
+                                <strong class="grand-amount" id="summaryGrandTotal">₹{{ checkout_data.total_amount }}</strong>
+                            </div>
+                        </div>
+
+                        <!-- Return & Support Info -->
+                        <div class="checkout-support-card">
+                            <div class="d-flex align-items-center gap-3">
+                                <i class="bi bi-headset fs-3 text-gold"></i>
+                                <div>
+                                    <h5 class="mb-0">Need Assistance?</h5>
+                                    <small class="text-muted">Call our order helpline at +91 98765 43210</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="text-center mt-3">
+                            <a href="{% url 'store:cart_detail' %}" class="text-muted small">← Edit Shopping Cart</a>
+                        </div>
+                    </aside>
+                </div>
+            </div>
+        </form>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+
+{% block title %}Your Cart | Annapurna Foods{% endblock %}
+
+{% block content %}
+<section class="page-banner">
+    <div class="container">
+        <p class="eyebrow text-gold">YOUR SELECTIONS</p>
+        <h1>Shopping Cart</h1>
+    </div>
+</section>
+
+<section class="section-space">
+    <div class="container">
+        {% if cart_items %}
+        <div class="row g-4" id="cartContentRow">
+            <div class="col-lg-8" id="cartItemsContainer">
+                {% for item in cart_items %}
+                <article class="cart-item" id="cart-item-{{ item.product.id }}" data-product-id="{{ item.product.id }}">
+                    <div class="cart-image">
+                        {% if item.product.image %}
+                            <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}">
+                        {% else %}
+                            <i class="bi bi-basket2-fill"></i>
+                        {% endif %}
+                    </div>
+
+                    <div class="cart-item-info">
+                        <small>{{ item.product.category.name }}</small>
+                        <h2>{{ item.product.name }}</h2>
+                        <strong class="item-unit-price">₹{{ item.product.current_price }}</strong>
+                    </div>
+
+                    <div class="cart-quantity">
+                        <form method="post" action="{% url 'store:cart_action' %}" class="cart-action-form" data-action="decrease">
+                            {% csrf_token %}
+                            <input type="hidden" name="product_id" value="{{ item.product.id }}">
+                            <input type="hidden" name="action" value="decrease">
+                            <button type="submit" aria-label="Decrease quantity" class="qty-btn qty-decrease">−</button>
+                        </form>
+
+                        <span class="cart-qty-val" id="qty-val-{{ item.product.id }}">{{ item.quantity }}</span>
+
+                        <form method="post" action="{% url 'store:cart_action' %}" class="cart-action-form" data-action="increase">
+                            {% csrf_token %}
+                            <input type="hidden" name="product_id" value="{{ item.product.id }}">
+                            <input type="hidden" name="action" value="increase">
+                            <button type="submit" aria-label="Increase quantity" class="qty-btn qty-increase">+</button>
+                        </form>
+                    </div>
+
+                    <div class="cart-item-total" id="item-total-{{ item.product.id }}">₹{{ item.item_total }}</div>
+
+                    <form method="post" action="{% url 'store:cart_action' %}" class="cart-action-form" data-action="remove">
+                        {% csrf_token %}
+                        <input type="hidden" name="product_id" value="{{ item.product.id }}">
+                        <input type="hidden" name="action" value="remove">
+                        <button type="submit" class="remove-item" aria-label="Remove {{ item.product.name }}">
+                            <i class="bi bi-trash3"></i>
+                        </button>
+                    </form>
+                </article>
+                {% endfor %}
+            </div>
+
+            <div class="col-lg-4">
+                <aside class="cart-summary">
+                    <h2>Order Summary</h2>
+                    <div>
+                        <span>Subtotal</span>
+                        <strong class="cart-subtotal-val" id="cartSubtotal">₹{{ cart_total }}</strong>
+                    </div>
+                    <div>
+                        <span>Shipping</span>
+                        <strong>Calculated at checkout</strong>
+                    </div>
+                    <hr>
+                    <div class="cart-total">
+                        <span>Total</span>
+                        <strong class="cart-total-val" id="cartTotal">₹{{ cart_total }}</strong>
+                    </div>
+                    <a href="{% url 'store:checkout' %}" class="btn btn-gold w-100 mt-4 text-center d-block">Proceed to Checkout <i class="bi bi-arrow-right ms-1"></i></a>
+                    <a href="{% url 'store:product_list' %}" class="continue-shopping">← Continue Shopping</a>
+                </aside>
+            </div>
+        </div>
+
+        <div class="empty-cart text-center d-none" id="emptyCartMessage">
+            <i class="bi bi-bag-heart"></i>
+            <h2>Your cart is empty</h2>
+            <p>Add some authentic flavours to get started.</p>
+            <a href="{% url 'store:product_list' %}" class="btn btn-gold">Explore Products</a>
+        </div>
+        {% else %}
+        <div class="empty-cart text-center" id="emptyCartMessage">
+            <i class="bi bi-bag-heart"></i>
+            <h2>Your cart is empty</h2>
+            <p>Add some authentic flavours to get started.</p>
+            <a href="{% url 'store:product_list' %}" class="btn btn-gold">Explore Products</a>
+        </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

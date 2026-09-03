@@ -1,0 +1,133 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Our Story | Annapurna Foods{% endblock %}
+
+{% block content %}
+<section class="about-page-hero">
+    <div class="container">
+        <p class="eyebrow text-gold">SINCE 1992</p>
+        <h1>Our Story</h1>
+        <p>
+            For over three decades, Annapurna Foods has been crafting authentic Indian
+            delicacies that bring families together. Every product we create carries the
+            warmth of tradition and the promise of purity.
+        </p>
+    </div>
+</section>
+
+<section class="story-section">
+    <div class="container">
+        <div class="row align-items-center g-5">
+            <div class="col-lg-6" data-reveal>
+                <p class="eyebrow">THE BEGINNING</p>
+                <h2>A Legacy of Flavour</h2>
+                <p class="story-text">
+                    It started in a small kitchen in the heart of India, where a family passionate about
+                    food decided to share their cherished recipes with the world. What began as a humble
+                    home enterprise quickly blossomed into Annapurna Foods — a name synonymous with
+                    authenticity, quality, and love.
+                </p>
+                <p class="story-text">
+                    Today, we serve thousands of families across India and beyond, offering a curated
+                    selection of sweets, namkeen, pickles, masalas, and dry fruits — all made with the
+                    same dedication that started it all. We believe that food is more than nourishment;
+                    it's a bridge between generations, cultures, and hearts.
+                </p>
+            </div>
+            <div class="col-lg-6" data-reveal>
+                <div class="about-image-card">
+                    <i class="bi bi-flower1"></i>
+                    <p>Three decades<br>of authentic taste.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="values-section">
+    <div class="container">
+        <div class="section-heading text-center" data-reveal>
+            <p class="eyebrow">WHAT WE STAND FOR</p>
+            <h2>Our Values</h2>
+            <span class="heading-line"></span>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-md-6 col-lg-3" data-reveal data-reveal-delay="1">
+                <div class="value-card">
+                    <i class="bi bi-heart-fill"></i>
+                    <h3>Authenticity</h3>
+                    <p>Every recipe is rooted in tradition, passed down through generations and prepared with time-honoured techniques.</p>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3" data-reveal data-reveal-delay="2">
+                <div class="value-card">
+                    <i class="bi bi-patch-check-fill"></i>
+                    <h3>Purity</h3>
+                    <p>We use only the finest, purest ingredients — no artificial colours, no preservatives, no shortcuts.</p>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3" data-reveal data-reveal-delay="3">
+                <div class="value-card">
+                    <i class="bi bi-people-fill"></i>
+                    <h3>Family</h3>
+                    <p>We're a family business serving families. Every product is made with the love and care of home cooking.</p>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3" data-reveal data-reveal-delay="4">
+                <div class="value-card">
+                    <i class="bi bi-shield-fill-check"></i>
+                    <h3>Trust</h3>
+                    <p>From sourcing to packaging, every step meets the highest standards of hygiene and quality control.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="stats-section">
+    <div class="container">
+        <div class="row g-4">
+            <div class="col-6 col-lg-3" data-reveal data-reveal-delay="1">
+                <div class="stat-item">
+                    <span class="stat-number" data-target="30" data-suffix="+">0</span>
+                    <span class="stat-label">Years of Legacy</span>
+                </div>
+            </div>
+            <div class="col-6 col-lg-3" data-reveal data-reveal-delay="2">
+                <div class="stat-item">
+                    <span class="stat-number" data-target="500" data-suffix="+">0</span>
+                    <span class="stat-label">Products</span>
+                </div>
+            </div>
+            <div class="col-6 col-lg-3" data-reveal data-reveal-delay="3">
+                <div class="stat-item">
+                    <span class="stat-number" data-target="100000" data-suffix="+">0</span>
+                    <span class="stat-label">Happy Families</span>
+                </div>
+            </div>
+            <div class="col-6 col-lg-3" data-reveal data-reveal-delay="4">
+                <div class="stat-item">
+                    <span class="stat-number" data-target="50" data-suffix="+">0</span>
+                    <span class="stat-label">Cities Served</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="newsletter-section">
+    <div class="container text-center">
+        <p class="eyebrow text-gold">JOIN THE FAMILY</p>
+        <h2>Stay Connected</h2>
+        <p>Subscribe for exclusive offers, new product launches, and festive specials.</p>
+
+        <form class="newsletter-form">
+            <label class="visually-hidden" for="about-email">Email address</label>
+            <input id="about-email" type="email" placeholder="Enter your email" required>
+            <button type="submit" class="btn btn-gold">Subscribe</button>
+        </form>
+    </div>
+</section>
+{% endblock %}

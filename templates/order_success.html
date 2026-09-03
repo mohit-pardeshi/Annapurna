@@ -1,0 +1,193 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Order Confirmed #{{ order.order_id }} | Annapurna Foods{% endblock %}
+
+{% block content %}
+<section class="page-banner order-success-banner">
+    <div class="container text-center">
+        <div class="success-icon-badge">
+            <i class="bi bi-check-lg"></i>
+        </div>
+        <p class="eyebrow text-gold mt-3">CONGRATULATIONS!</p>
+        <h1>Order Placed Successfully</h1>
+        <p class="banner-sub">Thank you, <strong>{{ order.full_name }}</strong>! We have received your order and started
+            preparing your fresh Indian delicacies.</p>
+    </div>
+</section>
+
+<section class="section-space success-details-section">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <!-- Order Reference Bar -->
+                <div class="order-ref-card mb-4">
+                    <div class="row align-items-center g-3 text-center text-md-start">
+                        <div class="col-md-3">
+                            <span class="text-muted small d-block">Order Reference</span>
+                            <strong class="fs-5 text-maroon">#{{ order.order_id }}</strong>
+                        </div>
+                        <div class="col-md-3">
+                            <span class="text-muted small d-block">Order Date</span>
+                            <strong>{{ order.created_at|date:"d M Y, h:i A" }}</strong>
+                        </div>
+                        <div class="col-md-3">
+                            <span class="text-muted small d-block mb-1">Payment Method</span>
+                            <span class="payment-method-badge">
+                                <i class="bi bi-wallet2 me-1 text-gold"></i> {{ order.get_payment_method_display }}
+                            </span>
+                        </div>
+                        <div class="col-md-3 text-md-end">
+                            <button onclick="window.print()" class="btn btn-sm btn-outline-maroon">
+                                <i class="bi bi-printer me-1"></i> Print Invoice
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row g-4">
+                    <!-- Left: Items Purchased & Delivery Address -->
+                    <div class="col-lg-7">
+                        <!-- Products Table -->
+                        <div class="order-receipt-card mb-4">
+                            <div class="receipt-card-header">
+                                <h3>Items in this Order</h3>
+                                <span class="badge bg-maroon text-gold">
+                                    {{ order.items.count }} Item{{ order.items.count|pluralize }}
+                                </span>
+                            </div>
+
+                            <div class="receipt-items-table">
+                                {% for item in order.items.all %}
+                                <div class="receipt-item-row">
+                                    <div class="receipt-img">
+                                        {% if item.product_image %}
+                                        <img src="{{ item.product_image }}" alt="{{ item.product_name }}">
+                                        {% elif item.product and item.product.image %}
+                                        <img src="{{ item.product.image.url }}" alt="{{ item.product_name }}">
+                                        {% else %}
+                                        <i class="bi bi-basket2-fill"></i>
+                                        {% endif %}
+                                    </div>
+                                    <div class="receipt-info">
+                                        <h4>{{ item.product_name }}</h4>
+                                        <div class="text-muted small">
+                                            Qty: {{ item.quantity }} × ₹{{ item.price }}
+                                        </div>
+                                    </div>
+                                    <div class="receipt-price">
+                                        ₹{{ item.item_total }}
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+
+                        <!-- Delivery Address Card -->
+                        <div class="order-receipt-card">
+                            <div class="receipt-card-header">
+                                <h3>Delivery Information</h3>
+                                <i class="bi bi-geo-alt-fill text-gold fs-5"></i>
+                            </div>
+
+                            <div class="receipt-address-body">
+                                <h4 class="mb-1 text-maroon">{{ order.full_name }}</h4>
+                                <p class="mb-2 text-muted">
+                                    {{ order.address }}<br>
+                                    {{ order.city }}, {{ order.state }} - <strong>{{ order.pincode }}</strong>
+                                </p>
+                                <div class="d-flex align-items-center gap-3 text-muted small mt-3 flex-wrap">
+                                    <span>
+                                        <i class="bi bi-telephone-fill text-maroon me-1"></i> +91 {{ order.phone }}
+                                    </span>
+                                    {% if order.email %}
+                                    <span>
+                                        <i class="bi bi-envelope-fill text-maroon me-1"></i> {{ order.email }}
+                                    </span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right: Payment & Grand Total Card -->
+                    <div class="col-lg-5">
+                        <div class="order-receipt-card mb-4">
+                            <div class="receipt-card-header">
+                                <h3>Payment Summary</h3>
+                                <span
+                                    class="badge bg-success-subtle text-success border border-success-subtle px-2 py-1">
+                                    {{ order.get_order_status_display }}
+                                </span>
+                            </div>
+
+                            <div class="receipt-totals-body">
+                                <div class="receipt-total-row">
+                                    <span>Items Subtotal</span>
+                                    <strong>₹{{ order.subtotal }}</strong>
+                                </div>
+
+                                {% if order.discount_amount > 0 %}
+                                <div class="receipt-total-row text-success">
+                                    <span>Coupon Discount ({{ order.coupon_code }})</span>
+                                    <strong>- ₹{{ order.discount_amount }}</strong>
+                                </div>
+                                {% endif %}
+
+                                <div class="receipt-total-row">
+                                    <span>Delivery Charges</span>
+                                    <span>
+                                        {% if order.delivery_charge == 0 %}
+                                        <strong class="text-success">FREE</strong>
+                                        {% else %}
+                                        <strong>₹{{ order.delivery_charge }}</strong>
+                                        {% endif %}
+                                    </span>
+                                </div>
+
+                                <div class="receipt-total-row">
+                                    <span>Taxes & GST (5%)</span>
+                                    <strong>₹{{ order.tax_amount }}</strong>
+                                </div>
+
+                                <hr>
+
+                                <div class="receipt-total-row grand-row">
+                                    <div>
+                                        <strong class="fs-5 text-maroon">Final Amount Paid</strong>
+                                        <small class="d-block text-muted">{{ order.get_payment_method_display }}</small>
+                                    </div>
+                                    <strong class="fs-4 text-maroon">₹{{ order.total_amount }}</strong>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Delivery Timeline Card -->
+                        <div class="order-delivery-card mb-4">
+                            <div class="d-flex align-items-center gap-3">
+                                <div class="delivery-truck-circle">
+                                    <i class="bi bi-truck text-gold fs-4"></i>
+                                </div>
+                                <div>
+                                    <strong class="d-block text-maroon">Estimated Delivery</strong>
+                                    <span class="text-muted small">Within 3–5 Business Days to {{ order.city }}</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="d-grid gap-2">
+                            <a href="{% url 'store:product_list' %}" class="btn btn-gold btn-lg text-center">
+                                <i class="bi bi-bag-plus me-2"></i> Continue Shopping
+                            </a>
+                            <a href="{% url 'store:home' %}" class="btn btn-outline-maroon text-center">
+                                Back to Homepage
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

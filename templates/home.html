@@ -1,0 +1,415 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Annapurna Foods | The Taste of Tradition{% endblock %}
+
+{% block content %}
+<section class="hero-section" id="heroSection">
+    <!-- Dynamic Hero Background Image Scroller -->
+    <div class="hero-bg-slider" id="heroBgSlider">
+        <div class="hero-bg-slide active" data-slide="0">
+            <img src="{% static 'images/hero-slide-1.jpg' %}" alt="Traditional Indian sweets and delicacies"
+                class="hero-image">
+        </div>
+        <div class="hero-bg-slide" data-slide="1">
+            <img src="{% static 'images/hero-slide-2.jpg' %}" alt="Celebratory festive boxes and gift hampers"
+                class="hero-image">
+        </div>
+        <div class="hero-bg-slide" data-slide="2">
+            <img src="{% static 'images/hero-slide-3.jpg' %}" alt="Authentic savoury namkeen and aromatic spices"
+                class="hero-image">
+        </div>
+    </div>
+
+    <div class="hero-overlay"></div>
+
+    <!-- 3D Floating geometric shapes -->
+    <div class="hero-3d-layer" id="hero3dLayer">
+        <div class="hero-shape"></div>
+        <div class="hero-shape"></div>
+        <div class="hero-shape"></div>
+        <div class="hero-shape"></div>
+        <div class="hero-shape"></div>
+        <div class="hero-shape"></div>
+    </div>
+
+    <!-- Gold floating particles -->
+    <div class="hero-particles" id="heroParticles">
+        <span class="hero-particle"></span>
+        <span class="hero-particle"></span>
+        <span class="hero-particle"></span>
+        <span class="hero-particle"></span>
+        <span class="hero-particle"></span>
+        <span class="hero-particle"></span>
+        <span class="hero-particle"></span>
+        <span class="hero-particle"></span>
+        <span class="hero-particle"></span>
+        <span class="hero-particle"></span>
+        <span class="hero-particle"></span>
+        <span class="hero-particle"></span>
+    </div>
+
+    <div class="container hero-content" id="heroContent">
+        <p class="eyebrow text-gold">THE TASTE OF TRADITION</p>
+        <h1>Made with Purity,<br>Made for You</h1>
+        <p class="hero-subtitle">Premium Quality <span>•</span> Authentic Recipes <span>•</span> Irresistible Taste</p>
+        <a href="#best-sellers" class="btn btn-gold">Shop Now <i class="bi bi-arrow-right ms-2"></i></a>
+    </div>
+
+    <button class="hero-arrow hero-arrow-left" aria-label="Previous slide">
+        <i class="bi bi-chevron-left"></i>
+    </button>
+    <button class="hero-arrow hero-arrow-right" aria-label="Next slide">
+        <i class="bi bi-chevron-right"></i>
+    </button>
+
+    <div class="hero-dots" aria-label="Hero slider navigation">
+        <button class="active" aria-label="Slide 1"></button>
+        <button aria-label="Slide 2"></button>
+        <button aria-label="Slide 3"></button>
+    </div>
+</section>
+
+<section class="benefits-section">
+    <div class="container">
+        <div class="row g-0">
+            <div class="col-6 col-lg-3 benefit-item">
+                <i class="bi bi-truck"></i>
+                <div><strong>Free Delivery</strong><span>On Orders Above ₹999</span></div>
+            </div>
+            <div class="col-6 col-lg-3 benefit-item">
+                <i class="bi bi-shield-check"></i>
+                <div><strong>Secure Payment</strong><span>100% Protected</span></div>
+            </div>
+            <div class="col-6 col-lg-3 benefit-item">
+                <i class="bi bi-arrow-repeat"></i>
+                <div><strong>Easy Returns</strong><span>Hassle Free Returns</span></div>
+            </div>
+            <div class="col-6 col-lg-3 benefit-item">
+                <i class="bi bi-headset"></i>
+                <div><strong>Customer Support</strong><span>+91 12345 67890</span></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="section-space cream-section" id="categories">
+    <div class="container">
+        <div class="section-heading text-center" data-reveal>
+            <p class="eyebrow">DISCOVER OUR RANGE</p>
+            <h2>Popular Categories</h2>
+            <span class="heading-line"></span>
+        </div>
+
+        <div class="row row-cols-2 row-cols-md-4 g-4">
+            {% for category in categories %}
+            <div class="col" data-reveal data-reveal-delay="{{ forloop.counter }}">
+                <a href="{{ category.url }}" class="category-card">
+                    <div class="category-img-frame">
+                        <img src="{{ category.image }}" alt="{{ category.name }}" class="category-img">
+                    </div>
+                    <span class="category-name">{{ category.name }}</span>
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<section class="section-space" id="best-sellers">
+    <div class="container">
+        <div class="section-heading text-center" data-reveal>
+            <p class="eyebrow">LOVED BY FAMILIES</p>
+            <h2>Best Sellers</h2>
+            <span class="heading-line"></span>
+        </div>
+
+        <div class="row g-4">
+            {% for product in best_sellers %}
+            <div class="col-6 col-lg-3" data-reveal data-reveal-delay="{{ forloop.counter }}">
+                <article class="product-card">
+                    <button class="wishlist-button" aria-label="Add {{ product.name }} to wishlist">
+                        <i class="bi bi-heart"></i>
+                    </button>
+                    {% if product.image %}
+                    <a href="{% url 'store:product_detail' product.slug %}" class="product-image-link">
+                        <img src="{{ product.image.url }}" alt="{{ product.name }}" class="product-image">
+                    </a>
+                    {% else %}
+                    <div class="product-image-placeholder">
+                        <i class="bi bi-basket2-fill"></i>
+                    </div>
+                    {% endif %}
+                    <div class="product-card-body">
+                        <div class="rating"><i class="bi bi-star-fill"></i> {{ product.rating }}</div>
+                        <h3><a href="{% url 'store:product_detail' product.slug %}">{{ product.name }}</a></h3>
+                        <p>{{ product.description|truncatewords:10 }}</p>
+                        <div class="d-flex justify-content-between align-items-center gap-2">
+                            <strong class="price">₹{{ product.current_price }}</strong>
+                            <form method="post" action="{% url 'store:add_to_cart' %}" class="m-0">
+                                {% csrf_token %}
+                                <input type="hidden" name="product_id" value="{{ product.id }}">
+                                <input type="hidden" name="quantity" value="1">
+                                <button type="submit" class="btn btn-sm btn-outline-maroon">Add to Cart</button>
+                            </form>
+                        </div>
+                    </div>
+                </article>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<section class="section-space new-launch-section">
+    <div class="container">
+        <div class="section-heading text-center text-white" data-reveal>
+            <p class="eyebrow text-gold">JUST ARRIVED</p>
+            <h2>New Launches</h2>
+            <span class="heading-line"></span>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-md-4" data-reveal data-reveal-delay="1">
+                <article class="launch-card">
+                    <span class="new-badge">New</span>
+                    <i class="bi bi-gem launch-icon"></i>
+                    <h3>Premium Dry Fruit Laddu</h3>
+                    <p>Wholesome dry fruits, fragrant ghee, and a touch of cardamom.</p>
+                </article>
+            </div>
+            <div class="col-md-4" data-reveal data-reveal-delay="2">
+                <article class="launch-card">
+                    <span class="new-badge">New</span>
+                    <i class="bi bi-stars launch-icon"></i>
+                    <h3>Royal Kaju Mix</h3>
+                    <p>A celebratory mix of roasted cashews and traditional Indian flavours.</p>
+                </article>
+            </div>
+            <div class="col-md-4" data-reveal data-reveal-delay="3">
+                <article class="launch-card">
+                    <span class="new-badge">New</span>
+                    <i class="bi bi-jar-fill launch-icon"></i>
+                    <h3>Special Punjabi Pickle</h3>
+                    <p>Bold, tangy and lovingly prepared with hand-ground spices.</p>
+                </article>
+            </div>
+        </div>
+
+        <div class="text-center mt-5">
+            <a href="/new-launches/" class="btn btn-gold">Explore New Launches</a>
+        </div>
+    </div>
+</section>
+
+<section class="section-space festive-section">
+    <div class="container">
+        <div class="section-heading text-center" data-reveal>
+            <p class="eyebrow">GIFT THE JOY OF FLAVOUR</p>
+            <h2>Celebrate with Annapurna</h2>
+            <span class="heading-line"></span>
+        </div>
+
+        <div class="row g-4">
+            {% for combo in festive_combos %}
+            <div class="col-md-4" data-reveal data-reveal-delay="{{ forloop.counter }}">
+                <article class="combo-card {% if forloop.counter == 2 %}featured-combo{% endif %}">
+                    {% if forloop.counter == 1 %}
+                    <span class="combo-badge">Bestseller</span>
+                    {% elif forloop.counter == 2 %}
+                    <span class="combo-badge">Most Loved</span>
+                    {% else %}
+                    <span class="combo-badge">Royal Edition</span>
+                    {% endif %}
+
+                    {% if combo.image %}
+                    <a href="{% url 'store:product_detail' combo.slug %}" class="combo-image-link"
+                        aria-label="View {{ combo.name }}">
+                        <img src="{{ combo.image.url }}" alt="{{ combo.name }}" class="combo-image">
+                    </a>
+                    {% endif %}
+
+                    <div class="combo-content">
+                        <h3><a href="{% url 'store:product_detail' combo.slug %}">{{ combo.name }}</a></h3>
+                        <p>{{ combo.description }}</p>
+
+                        <div class="combo-pricing">
+                            <strong class="combo-price">₹{{ combo.current_price }}</strong>
+                            {% if combo.discount_price %}
+                            <span class="combo-old-price">₹{{ combo.price }}</span>
+                            {% endif %}
+                        </div>
+
+                        <div class="combo-actions">
+                            <a href="{% url 'store:product_detail' combo.slug %}"
+                                class="btn btn-sm btn-outline-combo">View Combo</a>
+                            <form method="post" action="{% url 'store:add_to_cart' %}" class="m-0 flex-grow-1">
+                                {% csrf_token %}
+                                <input type="hidden" name="product_id" value="{{ combo.id }}">
+                                <input type="hidden" name="quantity" value="1">
+                                <button type="submit" class="btn btn-sm btn-gold w-100">Add to Cart</button>
+                            </form>
+                        </div>
+                    </div>
+                </article>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="text-center mt-5" data-reveal>
+            <a href="{% url 'store:festive_combos' %}" class="btn btn-gold">Explore All Festive Combos <i
+                    class="bi bi-arrow-right ms-2"></i></a>
+        </div>
+    </div>
+</section>
+
+<section class="section-space about-section" id="aboutSection">
+    <div class="container">
+        <div class="row align-items-center g-5">
+            <div class="col-lg-6" data-reveal>
+                <div class="about-content-wrap">
+                    <p class="eyebrow">OUR PROMISE</p>
+                    <h2 class="about-heading">About Our Company</h2>
+                    <p class="about-copy">
+                        Annapurna Foods is committed to bringing authentic Indian flavours to every home.
+                        We combine traditional recipes with carefully selected ingredients and modern
+                        hygienic packaging to deliver delicious food that families can trust.
+                    </p>
+
+                    <div class="row g-3">
+                        <div class="col-6">
+                            <div class="about-feature">
+                                <span class="about-feature-icon"><i class="bi bi-award"></i></span>
+                                <div>
+                                    <strong>Premium Quality</strong>
+                                    <small>Pure ghee goodness</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="about-feature">
+                                <span class="about-feature-icon"><i class="bi bi-patch-check"></i></span>
+                                <div>
+                                    <strong>100% Pure</strong>
+                                    <small>Natural ingredients</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="about-feature">
+                                <span class="about-feature-icon"><i class="bi bi-book"></i></span>
+                                <div>
+                                    <strong>Traditional Recipes</strong>
+                                    <small>Time-honoured taste</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="about-feature">
+                                <span class="about-feature-icon"><i class="bi bi-shield-check"></i></span>
+                                <div>
+                                    <strong>Hygienically Packed</strong>
+                                    <small>Aroma-locked freshness</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="d-flex align-items-center gap-3 mt-4 flex-wrap">
+                        <a href="{% url 'store:about' %}" class="btn btn-outline-maroon">Our Full Story <i
+                                class="bi bi-arrow-right ms-1"></i></a>
+                        <div class="about-trust-pill">
+                            <i class="bi bi-stars text-gold me-1"></i>
+                            <span>Trusted by 1,00,000+ Families</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-6" data-reveal data-reveal-delay="2">
+                <!-- 3D Interactive Showcase Container -->
+                <div class="about-3d-wrapper" id="about3dWrapper">
+                    <div class="about-3d-card" id="about3dCard">
+                        <!-- Heritage Background Image with Warm Vignette -->
+                        <div class="about-card-media">
+                            <img src="{% static 'images/about-heritage.jpg' %}"
+                                alt="Master sweetmaker handcrafting traditional Indian sweets" class="about-media-img"
+                                id="aboutMediaImg">
+                            <div class="about-media-overlay"></div>
+                        </div>
+
+                        <!-- Card Inner Content Layer with 3D Depth -->
+                        <div class="about-card-content" id="aboutCardContent">
+                            <div class="about-flower-mark">
+                                <i class="bi bi-flower1"></i>
+                            </div>
+                            <p class="about-quote">"Handcrafted flavours,<br>rooted in tradition."</p>
+                            <span class="about-legacy">Master Halwais Since 1992</span>
+                        </div>
+
+                        <!-- 3D Floating Badge (Pops out in 3D) -->
+                        <div class="about-floating-badge" id="aboutFloatingBadge">
+                            <div class="badge-icon"><i class="bi bi-shield-fill-check"></i></div>
+                            <div>
+                                <strong>30+ Years</strong>
+                                <span>Pure Heritage</span>
+                            </div>
+                        </div>
+
+                        <!-- 3D Floating Stat Pill (Pops out bottom-right) -->
+                        <div class="about-floating-stat" id="aboutFloatingStat">
+                            <i class="bi bi-heart-fill text-danger me-1"></i>
+                            <span>100% Desi Ghee</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="section-space why-section">
+    <div class="container">
+        <div class="section-heading text-center" data-reveal>
+            <p class="eyebrow">WHY FAMILIES TRUST US</p>
+            <h2>Why Choose Annapurna Foods?</h2>
+            <span class="heading-line"></span>
+        </div>
+
+        <div class="row row-cols-2 row-cols-md-3 row-cols-lg-6 g-3">
+            <div class="col" data-reveal data-reveal-delay="1">
+                <div class="why-card"><i class="bi bi-heart-fill"></i><span>Authentic Taste</span></div>
+            </div>
+            <div class="col" data-reveal data-reveal-delay="2">
+                <div class="why-card"><i class="bi bi-patch-check-fill"></i><span>Premium Ingredients</span></div>
+            </div>
+            <div class="col" data-reveal data-reveal-delay="3">
+                <div class="why-card"><i class="bi bi-shield-fill-check"></i><span>Hygienic Manufacturing</span></div>
+            </div>
+            <div class="col" data-reveal data-reveal-delay="4">
+                <div class="why-card"><i class="bi bi-sun-fill"></i><span>Fresh Products</span></div>
+            </div>
+            <div class="col" data-reveal data-reveal-delay="5">
+                <div class="why-card"><i class="bi bi-box-seam-fill"></i><span>Secure Packaging</span></div>
+            </div>
+            <div class="col" data-reveal data-reveal-delay="6">
+                <div class="why-card"><i class="bi bi-truck"></i><span>Fast Delivery</span></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="newsletter-section">
+    <div class="container text-center">
+        <p class="eyebrow text-gold">A LITTLE SOMETHING SPECIAL</p>
+        <h2>Stay Connected</h2>
+        <p>Subscribe to get special offers, new product updates, festive deals and more.</p>
+
+        <form class="newsletter-form">
+            <label class="visually-hidden" for="email">Email address</label>
+            <input id="email" type="email" placeholder="Enter your email" required>
+            <button type="submit" class="btn btn-gold">Subscribe</button>
+        </form>
+    </div>
+</section>
+{% endblock %}

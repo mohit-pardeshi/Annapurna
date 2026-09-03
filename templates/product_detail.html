@@ -1,0 +1,103 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ product.name }} | Annapurna Foods{% endblock %}
+
+{% block content %}
+<section class="section-space product-detail-section">
+    <div class="container">
+        <div class="row g-5 align-items-start">
+            <div class="col-lg-6">
+                <div class="detail-image-box">
+                    {% if product.image %}
+                        <img src="{{ product.image.url }}" alt="{{ product.name }}">
+                    {% else %}
+                        <i class="bi bi-basket2-fill"></i>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="col-lg-6">
+                <p class="eyebrow">{{ product.category.name }}</p>
+                <h1 class="detail-title">{{ product.name }}</h1>
+
+                <div class="detail-rating">
+                    <span><i class="bi bi-star-fill"></i> {{ product.rating }} / 5</span>
+                    <span class="stock-status">
+                        {% if product.stock > 0 %}In Stock{% else %}Out of Stock{% endif %}
+                    </span>
+                </div>
+
+                <div class="detail-price">
+                    <strong>₹{{ product.current_price }}</strong>
+                    {% if product.is_on_sale %}
+                        <del>₹{{ product.price }}</del>
+                    {% endif %}
+                </div>
+
+                <p class="detail-description">{{ product.description }}</p>
+
+                <form method="post" action="{% url 'store:add_to_cart' %}">
+    {% csrf_token %}
+    <input type="hidden" name="product_id" value="{{ product.id }}">
+
+    <div class="quantity-control">
+        <span>Quantity</span>
+        <input type="number" name="quantity" value="1" min="1" max="{{ product.stock }}">
+    </div>
+
+    <div class="detail-actions">
+        <button type="submit" class="btn btn-gold" {% if product.stock == 0 %}disabled{% endif %}>
+            <i class="bi bi-bag-plus me-2"></i>Add to Cart
+        </button>
+        <a href="{% url 'store:cart_detail' %}" class="btn btn-outline-maroon">View Cart</a>
+    </div>
+</form>
+                    <button class="btn btn-outline-maroon" {% if product.stock == 0 %}disabled{% endif %}>
+                        Buy Now
+                    </button>
+                </div>
+
+                <p class="shipping-note"><i class="bi bi-truck"></i> Free delivery on orders above ₹999.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="section-space cream-section">
+    <div class="container">
+        <div class="section-heading text-center">
+            <p class="eyebrow">YOU MAY ALSO LIKE</p>
+            <h2>Related Products</h2>
+            <span class="heading-line"></span>
+        </div>
+
+        <div class="row g-4">
+            {% for related_product in related_products %}
+            <div class="col-6 col-md-3">
+                <article class="product-card">
+                    <a href="{% url 'store:product_detail' related_product.slug %}">
+                        {% if related_product.image %}
+                            <img class="product-image" src="{{ related_product.image.url }}" alt="{{ related_product.name }}">
+                        {% else %}
+                            <div class="product-image-placeholder">
+                                <i class="bi bi-basket2-fill"></i>
+                            </div>
+                        {% endif %}
+                    </a>
+
+                    <div class="product-card-body">
+                        <div class="rating"><i class="bi bi-star-fill"></i> {{ related_product.rating }}</div>
+                        <h3><a href="{% url 'store:product_detail' related_product.slug %}">{{ related_product.name }}</a></h3>
+                        <strong class="price">₹{{ related_product.current_price }}</strong>
+                    </div>
+                </article>
+            </div>
+            {% empty %}
+            <div class="col-12 text-center">
+                <p class="empty-message">More products from this category are coming soon.</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %}

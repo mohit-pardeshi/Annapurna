@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ page_title }} | Annapurna Foods{% endblock %}
+
+{% block content %}
+<section class="page-banner">
+    <div class="container">
+        <p class="eyebrow text-gold">AN NAPURNA FOODS COLLECTION</p>
+        <h1>{{ page_title }}</h1>
+    </div>
+</section>
+
+<section class="section-space">
+    <div class="container">
+        <div class="product-toolbar">
+            <p>{{ products|length }} product{{ products|length|pluralize }} found</p>
+
+            <form method="get">
+                <label for="sort">Sort by:</label>
+                <select id="sort" name="sort" onchange="this.form.submit()">
+                    <option value="newest" {% if selected_sort == 'newest' %}selected{% endif %}>Newest</option>
+                    <option value="price_low" {% if selected_sort == 'price_low' %}selected{% endif %}>Price: Low to High</option>
+                    <option value="price_high" {% if selected_sort == 'price_high' %}selected{% endif %}>Price: High to Low</option>
+                    <option value="rating" {% if selected_sort == 'rating' %}selected{% endif %}>Highest Rated</option>
+                </select>
+            </form>
+        </div>
+
+        <div class="row g-4">
+            {% for product in products %}
+            <div class="col-6 col-md-4 col-lg-3">
+                <article class="product-card">
+                    <a href="{% url 'store:product_detail' product.slug %}" class="product-image-link">
+                        {% if product.image %}
+                            <img class="product-image" src="{{ product.image.url }}" alt="{{ product.name }}">
+                        {% else %}
+                            <div class="product-image-placeholder">
+                                <i class="bi bi-basket2-fill"></i>
+                            </div>
+                        {% endif %}
+                    </a>
+
+                    {% if product.is_new %}
+                        <span class="product-badge">New</span>
+                    {% endif %}
+
+                    <button class="wishlist-button" aria-label="Add {{ product.name }} to wishlist">
+                        <i class="bi bi-heart"></i>
+                    </button>
+
+                    <div class="product-card-body">
+                        <small class="product-category">{{ product.category.name }}</small>
+                        <div class="rating"><i class="bi bi-star-fill"></i> {{ product.rating }}</div>
+                        <h3><a href="{% url 'store:product_detail' product.slug %}">{{ product.name }}</a></h3>
+
+                        <div class="price-row">
+                            <strong class="price">₹{{ product.current_price }}</strong>
+                            {% if product.is_on_sale %}
+                                <del>₹{{ product.price }}</del>
+                            {% endif %}
+                        </div>
+
+                        <a href="{% url 'store:product_detail' product.slug %}" class="btn btn-sm btn-outline-maroon">
+                            View Product
+                        </a>
+                    </div>
+                </article>
+            </div>
+            {% empty %}
+            <div class="col-12">
+                <p class="empty-message">No products are available in this collection yet.</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %}
